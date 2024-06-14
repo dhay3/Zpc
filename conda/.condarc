@@ -1,0 +1,4 @@
+channels:
+  - defaults
+env_prompt: "╭─ conda on ({default_env})\n╰─ "
+auto_activate_base: false
