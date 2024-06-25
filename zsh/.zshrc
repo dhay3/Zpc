@@ -164,8 +164,8 @@ alias lt='ls --tree'
 alias ln='ln -v'
 #alias top='btop'
 alias cat='bat -pp'
-alias less='bat'
-alias more='bat'
+alias less='bat --pager "less -i"'
+alias more='bat --pager "less -i"'
 #alias man='man -P less'
 #alias grep='rg'
 #alias find='fd'
@@ -196,6 +196,7 @@ alias n='navi'
 alias nc='ncat'
 alias jq='jq -C'
 alias lynx='lynx -display_charset=utf-8'
+alias gitm='gitmoji'
 alias fzf='fzf --reverse'
 alias vbox='VirtualBox %U'
 alias vag='vagrant'
@@ -222,3 +223,4 @@ alias -s ppt=wpp
 alias -s pdf=okular
 alias -s md=typora
 # <<<< File assosicated aliases (end)
+___MY_VMOPTIONS_SHELL_FILE="${HOME}/.jetbrains.vmoptions.sh"; if [ -f "${___MY_VMOPTIONS_SHELL_FILE}" ]; then . "${___MY_VMOPTIONS_SHELL_FILE}"; fi

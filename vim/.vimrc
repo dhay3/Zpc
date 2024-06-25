@@ -33,7 +33,10 @@ set tabstop=2
 set expandtab
 set shiftwidth=2
 set shiftround
+
+" Paste and Copy Options
 set paste
+set clipboard=unnamedplus
 
 " Search Options
 set hlsearch
@@ -84,6 +87,10 @@ map <F2> GoDate: <Esc>:read !date<CR>kJ
 " insert mode maps
 imap <F2> <CR>Date: <Esc>:read !date<CR>kJa<CR>
 
+" yank text from vim to system clipboard
+autocmd TextYankPost * if (v:event.operator == 'y' || v:event.operator == 'd') | silent! execute 'call system("wl-copy", @")' | endif
+" paste text from system clipboard to vim
+nnoremap p :let @"=substitute(system("wl-paste --no-newline"), '<C-v><C-m>', '', 'g')<CR>p
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Autocmds
