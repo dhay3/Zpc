@@ -5,8 +5,9 @@
 #######################################################################
 # Start Tmux as the default Shell for user execlude dolphin and jetbrain
 if [[ -x "$(command -v tmux)" ]] && [[ -n "${DISPLAY}" ]] && [[ -z "${TMUX}" ]]; then
-    if [[ ! "$(readlink -f /proc/${PPID}/exe)" =~ "dolphin" ]] &&
-        [[ ! "$(readlink -f /proc/${PPID}/exe)" =~ "jetbrain" ]]; then
+    if [[ ! "$(readlink -f /proc/${PPID}/exe)" =~ "dolphinjetbrains" ]] &&
+        [[ ! "$(readlink -f /proc/${PPID}/exe)" =~ "jetbrain" ]] &&
+        [[ ! "$(readlink -f /proc/${PPID}/exe)" =~ "plasmashell" ]]; then
         exec tmux
     fi
 fi
@@ -92,11 +93,23 @@ fpath+=/opt/vagrant/embedded/gems/gems/vagrant-2.4.0/contrib/zsh
 compinit
 # <<<<  Vagrant command completion (end)
 
+# pip zsh completion start
+function _pip_completion {
+    local words cword
+    read -Ac words
+    read -cn cword
+    reply=($(COMP_WORDS="$words[*]" \
+        COMP_CWORD=$((cword - 1)) \
+        PIP_AUTO_COMPLETE=1 $words[1] 2>/dev/null))
+}
+compctl -K _pip_completion /home/cc/anaconda3/envs/lab3/bin/python -m pip
+# pip zsh completion end
+
 #######################################################################
 # Custom scripts
 #######################################################################
 #fastfetch
-[[ -x "$(command -v fastfetch)" ]] && fastfetch --disable-linewrap
+[[ ! "$(readlink -f /proc/${PPID}/exe)" =~ "jetbrain" ]] && [[ -x "$(command -v fastfetch)" ]] && fastfetch --disable-linewrap
 
 # Print a new line after command excuted
 precmd() {
@@ -223,4 +236,5 @@ alias -s ppt=wpp
 alias -s pdf=okular
 alias -s md=typora
 # <<<< File assosicated aliases (end)
-___MY_VMOPTIONS_SHELL_FILE="${HOME}/.jetbrains.vmoptions.sh"; if [ -f "${___MY_VMOPTIONS_SHELL_FILE}" ]; then . "${___MY_VMOPTIONS_SHELL_FILE}"; fi
+___MY_VMOPTIONS_SHELL_FILE="${HOME}/.jetbrains.vmoptions.sh"
+if [ -f "${___MY_VMOPTIONS_SHELL_FILE}" ]; then . "${___MY_VMOPTIONS_SHELL_FILE}"; fi
