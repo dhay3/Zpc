@@ -1,0 +1,398 @@
+#>>> Yaml Aliases Start >>>
+healthCheck: &healthCheck
+  url: "http://www.gstatic.com/generate_204"
+  lazy: true
+  interval: 600
+  timeout: 5000
+proxy-providers-options:
+  proxyProvidersCommon: &proxyProvidersCommon
+    type: http
+    interval: 3600
+    health-check:
+      enable: true
+      <<: *healthCheck
+rule-providers-options:
+  ruleProvidersCommon: &ruleProvidersCommon
+    type: http
+    format: yaml
+    interval: 10368000
+proxy-groups-options:
+  proxyGroupsCommon: &proxyGroupsCommon
+    <<: *healthCheck
+    max-failed-times: 3
+    include-all: true
+    #include-all-proxies: false
+    #include-all-providers: false
+  proxyGroupsUse: &proxyGroupsUse
+    use:
+      - example1
+      - example2
+    <<: *proxyGroupsCommon
+  proxyGroupsProxies: &proxyGroupsProxies
+    proxies:
+      - "🇦🇺 AU"
+      - "🇨🇦 CA"
+      - "🇩🇪 DE"
+      - "🇭🇰 HK"
+      - "🇮🇳 IN"
+      - "🇯🇵 JP"
+      - "🇰🇷 KR"
+      - "🇲🇴 MA"
+      - "🇲🇾 MY"
+      - "🇵🇭 PH"
+      - "🇷🇺 RU"
+      - "🇸🇬 SG"
+      - "🇹🇼 TW"
+      - "🇹🇷 TR"
+      - "🇬🇧 UK"
+      - "🇺🇸 US"
+  proxyGroupsProxiesCombined: &proxyGroupsProxiesCombined
+    proxies:
+      - "🌐 DIRECT"
+      - "🚫 REJECT"
+      - "🫴 Manual"
+      - "🇦🇺 AU"
+      - "🇨🇦 CA"
+      - "🇩🇪 DE"
+      - "🇭🇰 HK"
+      - "🇮🇳 IN"
+      - "🇯🇵 JP"
+      - "🇰🇷 KR"
+      - "🇲🇴 MA"
+      - "🇲🇾 MY"
+      - "🇵🇭 PH"
+      - "🇷🇺 RU"
+      - "🇸🇬 SG"
+      - "🇹🇼 TW"
+      - "🇹🇷 TR"
+      - "🇬🇧 UK"
+      - "🇺🇸 US"
+#<<< Yaml Aliases End <<<
+
+#>>> Genernal Configuration Start >>>
+bind-address: "*"
+mixed-port: 37897
+redir-port: 37898
+tproxy-port: 37899
+external-controller: 0.0.0.0:9090
+log-level: silent
+allow-lan: false
+ipv6: false
+unified-delay: true
+tcp-concurrent: true
+keep-alive-interval: 300
+global-client-fingerprint: random
+global-ua: clash.meta
+profile:
+  store-selected: true
+  store-fake-ip: true
+#<<< Genernal Configuration End <<<
+
+#>>> GEO Configuration Start >>>
+geodata-loader: standard
+geo-auto-update: true
+geo-update-interval: 168
+geox-url:
+  geoip: "https://hub.gitmirror.com/https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geoip.dat"
+  geosite: "https://hub.gitmirror.com/https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geosite.dat"
+  mmdb: "https://hub.gitmirror.com/https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/country.mmdb"
+  asn: "https://hub.gitmirror.com/https://github.com/xishang0128/geoip/releases/download/latest/GeoLite2-ASN.mmdb"
+#<<< GEO Configuration End <<<
+
+#>>> TUN/TAP Configuration Start >>>
+tun:
+  enable: true
+  stack: mixed
+  device: Meta
+  auto-route: true
+  auto-detect-interface: true
+  strict-route: true
+  dns-hijack:
+    - any:53
+  mtu: 1500
+#<<< TUN/TAP Configuration End <<<
+
+#>>> Domain Sniffing Configuration Start >>>
+sniffer:
+  enable: true
+  sniff:
+    HTTP:
+      ports: [80]
+    TLS:
+      ports: [443]
+    QUIC:
+      ports: [443]
+  skip-domain:
+    - '+.lan'
+    - '+.local'
+    - '+.localhost'
+#<<< Domain Sniffing Configuration End <<<
+
+#>>> DNS Configuration Start >>>
+dns:
+  enable: true
+  prefer-h3: true
+  ipv6: false
+  use-hosts: true
+  use-system-hosts: true
+  enhanced-mode: fake-ip
+  fake-ip-range: 198.40.0.1/16
+  fake-ip-filter:
+    - '+.lan'
+    - '+.local'
+    - '+.localhost'
+  # Nameservers for NS records
+  default-nameserver:
+    - 223.5.5.5
+    - 208.67.220.220
+  # Nameservers for Proxies
+  proxy-server-nameserver:
+    - https://doh.opendns.com/dns-query
+  # Default nameservers for all requests
+  nameserver:
+    - https://dns.alidns.com/dns-query
+  # Fallback nameserver for requests that exclude matched fallback-filter
+  fallback:
+    - https://doh.opendns.com/dns-query
+  fallback-filter:
+    geoip: true
+    geoip-code: CN
+    geosite:
+      - cn
+      - microsoft@cn
+      - apple@cn
+      - steam@cn
+  # It will not work in clash verge rev, use Global Extend Script instead
+  nameserver-policy:
+    '+.openwrt.home': '172.18.10.11'
+    '+.nas.home': '172.18.10.11'
+    '+.server.home': '172.18.10.11'
+#<<< DNS Configuration End <<<
+
+#>>> Proxy Providers Configuration Start >>>
+# Replace url with your subscription
+proxy-providers:
+  example1:
+    <<: *proxyProvidersCommon
+    url: "https://example1.org"
+    path: ./proxy_providers/example1.yaml
+    proxy: DIRECT
+  example2:
+    <<: *proxyProvidersCommon
+    url: "https://exmaple2.org"
+    path: ./proxy_providers/example2.yaml
+    proxy: DIRECT
+#<<< Proxy Providers Configuration End <<<
+
+#>>> Rule Providers Configuration Start >>>
+# https://github.com/Loyalsoldier/clash-rules
+# https://github.com/blackmatrix7/ios_rule_script/tree/master/rule/Clash
+rule-providers:
+  claude:
+    <<: *ruleProvidersCommon
+    behavior: domain
+    url: "https://github.com/blackmatrix7/ios_rule_script/raw/release/rule/Clash/Claude/Claude.yaml"
+    path: ./ruleset/Claude.yaml
+#<<< Rule Providers Configuration End <<<
+
+#>>> Proxy Groups(Policy) Configuration Start >>>
+proxy-groups:
+  - name: "🌐 DIRECT"
+    type: select
+    proxies:
+      - DIRECT
+  - name: "🚫 REJECT"
+    type: select
+    proxies:
+      - REJECT
+  - name: "🇦🇷 AR"
+    <<: *proxyGroupsUse
+    type: select
+    filter: "(?i)🇦🇷|阿根廷|argentina"
+  - name: "🇦🇺 AU"
+    <<: *proxyGroupsUse
+    type: select
+    filter: "(?i)🇦🇺|澳大利亚|澳大利亞|australia"
+  - name: "🇨🇦 CA"
+    <<: *proxyGroupsCommon
+    type: select
+    filter: "(?i)🇨🇦|加拿大|canada"
+  - name: "🇩🇪 DE"
+    <<: *proxyGroupsCommon
+    type: select
+    filter: "(?i)🇩🇪|德国|德國|柏林|慕尼黑|germany"
+  - name: "🇭🇰 HK"
+    <<: *proxyGroupsCommon
+    type: select
+    filter: "(?i)🇭🇰|香港|hongkong"
+  - name: "🇮🇳 IN"
+    <<: *proxyGroupsCommon
+    type: select
+    filter: "(?i)🇮🇳|印度|india"
+  - name: "🇯🇵 JP"
+    <<: *proxyGroupsCommon
+    type: select
+    filter: "(?i)🇯🇵|日本|japan"
+  - name: "🇰🇷 KR"
+    <<: *proxyGroupsCommon
+    type: select
+    filter: "(?i)🇰🇷|韩国|韓國|korean"
+  - name: "🇲🇴 MA"
+    <<: *proxyGroupsCommon
+    type: select
+    filter: "(?i)🇲🇴|澳门|澳門|maco"
+  - name: "🇲🇾 MY"
+    <<: *proxyGroupsCommon
+    type: select
+    filter: "(?i)🇲🇾|马来西亚|馬來西亞|malaysia"
+  - name: "🇵🇭 PH"
+    <<: *proxyGroupsCommon
+    type: select
+    filter: "(?i)🇵🇭|菲律宾|菲律賓|philippines"
+  - name: "🇷🇺 RU"
+    <<: *proxyGroupsCommon
+    type: select
+    filter: "(?i)🇷🇺|俄罗斯|俄羅斯|russia"
+  - name: "🇸🇬 SG"
+    <<: *proxyGroupsCommon
+    type: select
+    filter: "(?i)🇸🇬|新加坡|singapore"
+  - name: "🇹🇼 TW"
+    <<: *proxyGroupsCommon
+    type: select
+    filter: "(?i)🇹🇼|台湾|臺灣|taiwan"
+  - name: "🇹🇷 TR"
+    <<: *proxyGroupsCommon
+    type: select
+    filter: "(?i)🇹🇷|土耳其|turkey"
+  - name: "🇬🇧 UK"
+    <<: *proxyGroupsCommon
+    type: select
+    filter: "(?i)🇬🇧|英|英國|england|kingdom|britsh"
+  - name: "🇺🇸 US"
+    <<: *proxyGroupsCommon
+    type: select
+    filter: "(?i)🇺🇸|美国|美國|西雅图|西雅圖|洛杉矶|洛杉磯|艾斯本|america|states|seattle|angeles|ashburn"
+  - name: "🚘 Auto"
+    type: url-test
+    tolerance: 100
+    max-failed-times: 3
+    <<: *proxyGroupsProxies
+  - name: "🔙 Fallback"
+    type: fallback
+    url: 'https://www.gstatic.com/generate_204'
+    max-failed-times: 3
+    <<: *proxyGroupsProxies
+  - name: "📎 Relay"
+    type: relay
+    proxies:
+      - "🇭🇰 HK"
+      - "🇺🇸 US"
+  - name: "🫴 Manual"
+    type: select
+    proxies:
+      - "🌐 DIRECT"
+      - "🚫 REJECT"
+      - "🇦🇺 AU"
+      - "🇨🇦 CA"
+      - "🇩🇪 DE"
+      - "🇭🇰 HK"
+      - "🇮🇳 IN"
+      - "🇯🇵 JP"
+      - "🇰🇷 KR"
+      - "🇲🇴 MA"
+      - "🇲🇾 MY"
+      - "🇵🇭 PH"
+      - "🇷🇺 RU"
+      - "🇸🇬 SG"
+      - "🇹🇼 TW"
+      - "🇹🇷 TR"
+      - "🇬🇧 UK"
+      - "🇺🇸 US"
+  - name: "🔊 ADS"
+    type: select
+    proxies:
+      - "🌐 DIRECT"
+      - "🚫 REJECT"
+      - "🫴 Manual"
+  - name: "🤖 AI"
+    type: select
+    <<: *proxyGroupsProxiesCombined
+  - name: "🍎 Apple"
+    type: select
+    <<: *proxyGroupsProxiesCombined
+  - name: "🇬 Google"
+    type: select
+    <<: *proxyGroupsProxiesCombined
+  - name: "🧪 YouTube"
+    type: select
+    <<: *proxyGroupsProxiesCombined
+  - name: "🥅 Netflix"
+    type: select
+    <<: *proxyGroupsProxiesCombined
+  - name: "🐭 Disney"
+    type: select
+    <<: *proxyGroupsProxiesCombined
+  - name: "👌 HBO"
+    type: select
+    <<: *proxyGroupsProxiesCombined
+  - name: "🧙🏿‍♀️ Twitch"
+    type: select
+    <<: *proxyGroupsProxiesCombined
+  - name: "🐦 Twitter"
+    type: select
+    <<: *proxyGroupsProxiesCombined
+  - name: "📲 Telegram"
+    type: select
+    <<: *proxyGroupsProxiesCombined
+  - name: "🚂 Steam"
+    type: select
+    <<: *proxyGroupsProxiesCombined
+  - name: "🪟 Microsoft"
+    type: select
+    <<: *proxyGroupsProxiesCombined
+  - name: "📈 Speedtest"
+    type: select
+    <<: *proxyGroupsProxiesCombined
+  - name: "👂 Spotify"
+    type: select
+    <<: *proxyGroupsProxiesCombined
+  - name: "🪜 Proxy"
+    type: select
+    <<: *proxyGroupsProxiesCombined
+  - name: "🐟 Leakage"
+    type: select
+    <<: *proxyGroupsProxiesCombined
+#<<< Proxy Groups(Policy) Configuration End <<<
+
+#>>> Rules Configuration End >>>
+rules:
+  - GEOIP,PRIVATE,🌐 DIRECT
+  - GEOSITE,private,🌐 DIRECT
+  - GEOSITE,category-ads-all,🔊 ADS
+  - GEOSITE,google,🇬 Google
+  - GEOSITE,youtube,🧪 YouTube
+  - GEOSITE,netflix,🥅 Netflix
+  - GEOSITE,disney,🐭 Disney
+  - GEOSITE,hbo,👌 HBO
+  - GEOSITE,openai,🤖 AI
+  - RULE-SET,claude,🤖 AI
+  - GEOSITE,twitch,🧙🏿‍♀️ Twitch
+  - GEOSITE,twitter,🐦 Twitter
+  - GEOSITE,telegram,📲 Telegram
+  - GEOSITE,speedtest,📈 Speedtest
+  - GEOSITE,spotify,👂 Spotify
+  - GEOSITE,microsoft@cn,🌐 DIRECT
+  - GEOSITE,microsoft,🪟 Microsoft
+  - GEOSITE,apple@cn,🌐 DIRECT
+  - GEOSITE,apple,🍎 Apple
+  - GEOSITE,steam@cn,🌐 DIRECT
+  - GEOSITE,steam,🚂 Steam
+  - GEOSITE,bilibili,🫴 Manual
+  - GEOSITE,zhihu,🫴 Manual
+  - GEOSITE,douban,🫴 Manual
+  - GEOSITE,geolocation-!cn,🪜 Proxy
+  - GEOSITE,cn,🌐 DIRECT
+  - GEOIP,CN,🌐 DIRECT
+  - MATCH,🐟 Leakage
+#<<< Rules Configuration End <<<
