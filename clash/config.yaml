@@ -1,4 +1,4 @@
-# Do not use that configuration as an extend config or extend script when a profile has been 
+# Do not use that configuration as an extend config or extend script when a profile has been
 # selected that the profile's subscription url is in the $.proxy-provider.url list. If so the proxy
 # nodes will be duplicated in proxies panel in Clash Verge Rev, Create a new local profile which
 # contains this configuration and selected it. Or add a blank local profile to avoid it
@@ -77,7 +77,7 @@ proxy-groups-options:
 #<<< Yaml Aliases End <<<
 
 #>>> Genernal Configuration Start >>>
-# Do not use default port for security concern 
+# Do not use default port for security concern
 bind-address: "*"
 mixed-port: 37897
 redir-port: 37898
