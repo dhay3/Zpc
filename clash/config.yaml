@@ -1,3 +1,6 @@
+# The proxy nodes will be duplicated in proxies panel in Clash Verge Rev when the selected profile subscription url eqauls to $.proxy-provider.url
+# Add a local blank profile to avoid it
+
 #>>> Yaml Aliases Start >>>
 healthCheck: &healthCheck
   url: "http://www.gstatic.com/generate_204"
