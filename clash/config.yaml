@@ -195,7 +195,7 @@ rule-providers:
   claude:
     <<: *ruleProvidersCommon
     behavior: domain
-    url: "https://github.com/blackmatrix7/ios_rule_script/raw/release/rule/Clash/Claude/Claude.yaml"
+    url: "https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/Claude/Claude.yaml"
     path: ./ruleset/Claude.yaml
 #<<< Rule Providers Configuration End <<<
 
