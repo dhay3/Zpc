@@ -1,11 +1,11 @@
 [manager]
-ratio          = [ 2, 2, 4 ]
+ratio          = [ 1, 3, 4 ]
 sort_by        = "natural"
 sort_sensitive = true
 sort_reverse 	 = false
 sort_dir_first = true
 sort_translit  = false
-linemode       = "none"
+linemode       = "size_and_mtime"
 show_hidden    = true
 show_symlink   = true
 scrolloff      = 5
@@ -24,16 +24,19 @@ ueberzug_offset = [ 0, 0, 0, 0 ]
 
 [opener]
 editor = [
-	{ run = '${EDITOR:-vim} "${@}"', desc = "Edit file in $EDITOR", block = true, for = "linux" },
+	{ run = '${EDITOR:-vim} "${@}"', desc = "Edit files in $EDITOR", block = true, for = "linux" },
 ]
 extractor = [
-	{ run = 'vim "${@}"', desc = "Open archive in vim", block = true, for = "linux" },
+	{ run = 'vim "${@}"', desc = "Open archives in vim", block = true, for = "linux" },
+]
+viewer = [ 
+	{ run = 'kitten icat "${@}" && read', desc = "Display images in icat", block = true, for = "linux" },
 ]
 player = [
-	{ run = 'mpv --force-window "${@}"', desc = "Play audio or video in mpv", orphan = true, for = "linux" },
+	{ run = 'mpv --force-window "${@}"', desc = "Play audios or videos in mpv", orphan = true, for = "linux" },
 ]
 match = [
-	{ run = 'xdg-open "${@}"', desc = "Open file in the user's preferred application", orphan = true, for = "linux" },
+	{ run = 'xdg-open "${@}"', desc = "Open files in the user's preferred application", orphan = true, for = "linux" },
 ]
 
 
@@ -41,10 +44,11 @@ match = [
 rules = [
 	{ mime = "text/*", use = [ "editor", "match" ] },
 	{ mime = "application/{json,x-ndjson}", use = [ "editor", "match" ] },
-	{ mime = "image/*", use = [ "match" ] },
-	{ mime = "{audio,video}/*", use = [ "play", "match" ] },
+	{ mime = "image/*", use = [ "viewer","match" ] },
+	{ mime = "{audio,video}/*", use = [ "player", "match" ] },
 	{ mime = "application/{,g}zip", use = [ "extractor", "match" ] },
 	{ mime = "application/x-{tar,bzip*,7z-compressed,xz,rar}", use = [ "extractor", "match" ] },
+	{ name = "*.{lua}", use = [ "editor", "match" ] },
 	{ name = "*", use = [ "match" ] },
 ]
 

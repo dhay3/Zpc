@@ -3,14 +3,24 @@
 #######################################################################
 # Pre-scripts
 #######################################################################
-# Start Tmux as the default Shell for user execlude dolphin and jetbrain
+#Start Tmux as the default Shell for user execlude dolphin and jetbrain
 if [[ -x "$(command -v tmux)" ]] && [[ -n "${DISPLAY}" ]] && [[ -z "${TMUX}" ]]; then
-    if [[ ! "$(readlink -f /proc/${PPID}/exe)" =~ "dolphinjetbrains" ]] &&
+    if [[ ! "$(readlink -f /proc/${PPID}/exe)" =~ "dolphin" ]] &&
         [[ ! "$(readlink -f /proc/${PPID}/exe)" =~ "jetbrain" ]] &&
         [[ ! "$(readlink -f /proc/${PPID}/exe)" =~ "plasmashell" ]]; then
         exec tmux
     fi
 fi
+
+# yazi shell wrapper
+function yy() {
+    local tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
+    yazi "$@" --cwd-file="$tmp"
+    if cwd="$(cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+        builtin cd -- "$cwd"
+    fi
+    rm -f -- "$tmp"
+}
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
@@ -40,7 +50,7 @@ SAVEHIST=4096
 
 # Enviroment Virables
 export ZSH="/home/${USER}/.oh-my-zsh"
-# It will cause less to subl in editor mod which is unexpected
+# It will cause less to launch subl in editor mod which is unexpected
 # But if use bat instead of less it's not matter cause bat do not support editor mod right now
 #export VISUAL="/usr/bin/subl"
 export VISUAL="/usr/bin/vim"
@@ -56,6 +66,7 @@ export BROWSER="firefox"
 #######################################################################
 # >>>> Built-in plugins (start)
 plugins=(
+    conda-zsh-completion
     colored-man-pages
     command-not-found
     extract
@@ -67,7 +78,6 @@ plugins=(
     sudo
     themes
     web-search
-    conda-zsh-completion
 )
 # <<<< Built-in plugins (end)
 
@@ -88,21 +98,26 @@ fpath+=/usr/share/zsh/plugins/zsh-completions/src
 autopair-init
 # <<<< Extra plugins (end)
 
+# Implemented in zsh-completions
 # >>>> Vagrant command completion (start)
-fpath+=/opt/vagrant/embedded/gems/gems/vagrant-2.4.0/contrib/zsh
-compinit
+# fpath+=/opt/vagrant/embedded/gems/gems/vagrant-2.4.0/contrib/zsh
+# compinit
 # <<<<  Vagrant command completion (end)
 
 # pip zsh completion start
-function _pip_completion {
-    local words cword
-    read -Ac words
-    read -cn cword
-    reply=($(COMP_WORDS="$words[*]" \
-        COMP_CWORD=$((cword - 1)) \
-        PIP_AUTO_COMPLETE=1 $words[1] 2>/dev/null))
+#compdef -P pip[0-9.]#
+__pip() {
+    compadd $(COMP_WORDS="$words[*]" \
+        COMP_CWORD=$((CURRENT - 1)) \
+        PIP_AUTO_COMPLETE=1 $words[1] 2>/dev/null)
 }
-compctl -K _pip_completion /home/cc/anaconda3/envs/lab3/bin/python -m pip
+if [[ $zsh_eval_context[-1] == loadautofunc ]]; then
+    # autoload from fpath, call function directly
+    __pip "$@"
+else
+    # eval/source/. command, register function for later
+    compdef __pip -P 'pip[0-9.]#'
+fi
 # pip zsh completion end
 
 #######################################################################
@@ -118,7 +133,7 @@ precmd() {
 
 # Use gpg-agent instead of ssh-agent
 unset SSH_AGENT_PID
-if [ "${gnupg_SSH_AUTH_SOCK_by:-0}" -ne $$ ]; then
+if [[ "${gnupg_SSH_AUTH_SOCK_by:-0}" -ne $$ ]]; then
     export SSH_AUTH_SOCK="$(gpgconf --list-dirs agent-ssh-socket)"
 fi
 export GPG_TTY=${TTY:-"$(tty)"}
@@ -126,42 +141,40 @@ gpg-connect-agent updatestartuptty /bye >/dev/null
 
 #######################################################################
 # Bindings
-# ^ means ctrl
-# ^[ means escape
+# Use keybind command to list all bindings
+# Use showkey -a command to listen keystrokes
+# ^ equal to ctrl
+# ^[ equal to escape or alt
 #######################################################################
-# Set cursor to the beginning of a line
+# Movement
+bindkey -M main '^H' backward-char
+bindkey -M main '^L' forward-char
+bindkey -M main '^B' backward-word
+bindkey -M main '^F' forward-word
 bindkey -M main '^A' beginning-of-line
-# Set cursor to the end of a line
 bindkey -M main '^E' end-of-line
 
-# Set cursor backward one word
-# It's conflict with Tmux prefix, bind Tmux prefix to Ctrl + X
-bindkey -M main '^B' backward-word
-# Set cursor Forward one word
-bindkey -M main '^F' forward-word
-
-# Delete words before the cursor
-bindkey -M main '^U' backward-kill-line
-# Delete words after the cursor
-bindkey -M main '^K' kill-line
-
-# Delete one word before the cursor
+# Modifiying text
+#bindkey -M main '' backward-delete-char
+#bindkey -M main '' delete-char
 bindkey -M main '^W' backward-kill-word
-# Delete one word after the cursor
 bindkey -M main '^D' kill-word
+bindkey -M main '^U' backward-kill-line
+bindkey -M main '^K' kill-line
+bindkey -M main '^G' kill-whole-line
+bindkey -M main '^Y' yank
 
-# Search history backword one line
+# History
 bindkey -M main '^P' history-search-backward
-# Search history forward one line
 bindkey -M main '^N' history-search-forward
-
-# Search history via fzf
 bindkey -M main '^H' fzf-history-widget
-# Search current files via fzf
 bindkey -M main '^Q' fzf-file-widget
 
-bindkey -M main '^Y' yank
+bindkey -M main '^M' accept-line
 bindkey -M main '^L' clear-screen
+bindkey -M main '^T' quote-line
+bindkey -M main '^Z' fancy-ctrl-z
+bindkey -M main '^[^[' sudo-command-line
 
 #######################################################################
 # Aliases
@@ -207,7 +220,8 @@ alias pacman='pacman --color always'
 # >>>> Extra aliases (start)
 alias n='navi'
 alias nc='ncat'
-alias jq='jq -C'
+#With -C it will be export ANSI color code if redirect to files
+#alias jq='jq -C'
 alias lynx='lynx -display_charset=utf-8'
 alias gitm='gitmoji'
 alias fzf='fzf --reverse'
@@ -216,13 +230,14 @@ alias vag='vagrant'
 alias geeq='geeqie'
 alias wirek='wireshark'
 alias typo='typora'
-alias rag='ranger'
+#alias yy='yazi'
 alias wbs='web_search duckduckgo'
 alias ytd='yt-dlp'
 alias rdm='remotedesktopmanager'
 alias xfreerdp='xfreerdp /cert:tofu /fonts /bpp:64 /video /dynamic-resolution /scale:140 /scale-desktop:125'
 # Alias for logout KDE plasma with cancel menu
 alias logout="qdbus org.kde.LogoutPrompt /LogoutPrompt org.kde.LogoutPrompt.promptLogout"
+alias icat="kitten icat"
 # <<<< Extra aliases (end)
 
 # >>>> File assosicated aliases (start)
@@ -236,5 +251,7 @@ alias -s ppt=wpp
 alias -s pdf=okular
 alias -s md=typora
 # <<<< File assosicated aliases (end)
+
+# Crack jetbrains' IDE
 ___MY_VMOPTIONS_SHELL_FILE="${HOME}/.jetbrains.vmoptions.sh"
 if [ -f "${___MY_VMOPTIONS_SHELL_FILE}" ]; then . "${___MY_VMOPTIONS_SHELL_FILE}"; fi
