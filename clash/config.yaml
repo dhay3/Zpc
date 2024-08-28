@@ -6,11 +6,13 @@
 # https://wiki.metacubex.one/config/
 
 #>>> Yaml Aliases Start >>>
-healthCheck: &healthCheck
-  url: "http://www.gstatic.com/generate_204"
-  lazy: true
-  interval: 600
-  timeout: 5000
+gneral-options:
+  healthCheck: &healthCheck
+    url: "http://www.gstatic.com/generate_204"
+    lazy: true
+    interval: 600
+    timeout: 5000
+
 proxy-providers-options:
   proxyProvidersCommon: &proxyProvidersCommon
     type: http
@@ -18,24 +20,29 @@ proxy-providers-options:
     health-check:
       enable: true
       <<: *healthCheck
+
 rule-providers-options:
   ruleProvidersCommon: &ruleProvidersCommon
     type: http
     format: yaml
     interval: 10368000
+
 proxy-groups-options:
   proxyGroupsCommon: &proxyGroupsCommon
     <<: *healthCheck
     max-failed-times: 3
+  proxyGroupsInclude: &proxyGroupsInclude
     include-all: true
     #include-all-proxies: false
     #include-all-providers: false
+    <<: *proxyGroupsCommon
   proxyGroupsUse: &proxyGroupsUse
     use:
       - sub1
       - sub2
+      - sub3
     <<: *proxyGroupsCommon
-  proxyGroupsProxies: &proxyGroupsProxies
+  proxyGroup: &proxyGroup
     proxies:
       - "🇦🇺 AU"
       - "🇨🇦 CA"
@@ -43,17 +50,19 @@ proxy-groups-options:
       - "🇭🇰 HK"
       - "🇮🇳 IN"
       - "🇯🇵 JP"
+      - "🇰🇵 KP"
       - "🇰🇷 KR"
       - "🇲🇴 MA"
       - "🇲🇾 MY"
       - "🇵🇭 PH"
       - "🇷🇺 RU"
       - "🇸🇬 SG"
-      - "🇹🇼 TW"
+      - "🇹🇭 TH"
       - "🇹🇷 TR"
+      - "🇹🇼 TW"
       - "🇬🇧 UK"
       - "🇺🇸 US"
-  proxyGroupsProxiesCombined: &proxyGroupsProxiesCombined
+  proxyGroupCombined: &proxyGroupCombined
     proxies:
       - "🌐 DIRECT"
       - "🚫 REJECT"
@@ -64,14 +73,16 @@ proxy-groups-options:
       - "🇭🇰 HK"
       - "🇮🇳 IN"
       - "🇯🇵 JP"
+      - "🇰🇵 KP"
       - "🇰🇷 KR"
       - "🇲🇴 MA"
       - "🇲🇾 MY"
       - "🇵🇭 PH"
       - "🇷🇺 RU"
       - "🇸🇬 SG"
-      - "🇹🇼 TW"
+      - "🇹🇭 TH"
       - "🇹🇷 TR"
+      - "🇹🇼 TW"
       - "🇬🇧 UK"
       - "🇺🇸 US"
 #<<< Yaml Aliases End <<<
@@ -178,13 +189,18 @@ dns:
 proxy-providers:
   sub1:
     <<: *proxyProvidersCommon
-    url: "https://sub1-example.org"
+    url: "https://example.org"
     path: ./proxy_providers/sub1.yaml
     proxy: "🇭🇰 HK"
-  sub2:
+  sub3:
     <<: *proxyProvidersCommon
-    url: "https://sub2-example.org"
+    url: "https://example.org"
     path: ./proxy_providers/sub2.yaml
+    proxy: "🇭🇰 HK"
+  sub3:
+    <<: *proxyProvidersCommon
+    url: "https://example.org"
+    path: ./proxy_providers/sub3.yaml
     proxy: "🇭🇰 HK"
 #<<< Proxy Providers Configuration End <<<
 
@@ -210,83 +226,91 @@ proxy-groups:
     proxies:
       - REJECT
   - name: "🇦🇷 AR"
-    <<: *proxyGroupsUse
+    <<: *proxyGroupsInclude
     type: select
     filter: "(?i)🇦🇷|阿根廷|argentina"
   - name: "🇦🇺 AU"
-    <<: *proxyGroupsUse
+    <<: *proxyGroupsInclude
     type: select
     filter: "(?i)🇦🇺|澳大利亚|澳大利亞|australia"
   - name: "🇨🇦 CA"
-    <<: *proxyGroupsCommon
+    <<: *proxyGroupsInclude
     type: select
     filter: "(?i)🇨🇦|加拿大|canada"
   - name: "🇩🇪 DE"
-    <<: *proxyGroupsCommon
+    <<: *proxyGroupsInclude
     type: select
     filter: "(?i)🇩🇪|德国|德國|柏林|慕尼黑|germany"
   - name: "🇭🇰 HK"
-    <<: *proxyGroupsCommon
+    <<: *proxyGroupsInclude
     type: select
     filter: "(?i)🇭🇰|香港|hongkong"
   - name: "🇮🇳 IN"
-    <<: *proxyGroupsCommon
+    <<: *proxyGroupsInclude
     type: select
     filter: "(?i)🇮🇳|印度|india"
   - name: "🇯🇵 JP"
-    <<: *proxyGroupsCommon
+    <<: *proxyGroupsInclude
     type: select
     filter: "(?i)🇯🇵|日本|japan"
-  - name: "🇰🇷 KR"
-    <<: *proxyGroupsCommon
+  - name: "🇰🇵 KP"
+    <<: *proxyGroupsInclude
     type: select
-    filter: "(?i)🇰🇷|韩国|韓國|korean"
+    filter: "(?i)🇰🇵|朝鲜|朝鮮"
+  - name: "🇰🇷 KR"
+    <<: *proxyGroupsInclude
+    type: select
+    filter: "(?i)🇰🇷|韩国|韓國"
   - name: "🇲🇴 MA"
-    <<: *proxyGroupsCommon
+    <<: *proxyGroupsInclude
     type: select
     filter: "(?i)🇲🇴|澳门|澳門|maco"
   - name: "🇲🇾 MY"
-    <<: *proxyGroupsCommon
+    <<: *proxyGroupsInclude
     type: select
     filter: "(?i)🇲🇾|马来西亚|馬來西亞|malaysia"
   - name: "🇵🇭 PH"
-    <<: *proxyGroupsCommon
+    <<: *proxyGroupsInclude
     type: select
     filter: "(?i)🇵🇭|菲律宾|菲律賓|philippines"
   - name: "🇷🇺 RU"
-    <<: *proxyGroupsCommon
+    <<: *proxyGroupsInclude
     type: select
     filter: "(?i)🇷🇺|俄罗斯|俄羅斯|russia"
   - name: "🇸🇬 SG"
-    <<: *proxyGroupsCommon
+    <<: *proxyGroupsInclude
     type: select
     filter: "(?i)🇸🇬|新加坡|singapore"
-  - name: "🇹🇼 TW"
-    <<: *proxyGroupsCommon
+  - name: "🇹🇭 TH"
+    <<: *proxyGroupsInclude
     type: select
-    filter: "(?i)🇹🇼|台湾|臺灣|taiwan"
+    filter: "(?i)🇹🇭|泰国|泰國|Thailand"
   - name: "🇹🇷 TR"
-    <<: *proxyGroupsCommon
+    <<: *proxyGroupsInclude
     type: select
     filter: "(?i)🇹🇷|土耳其|turkey"
+  - name: "🇹🇼 TW"
+    <<: *proxyGroupsInclude
+    type: select
+    filter: "(?i)🇹🇼|台湾|臺灣|taiwan"
   - name: "🇬🇧 UK"
-    <<: *proxyGroupsCommon
+    <<: *proxyGroupsInclude
     type: select
     filter: "(?i)🇬🇧|英|英國|england|kingdom|britsh"
   - name: "🇺🇸 US"
-    <<: *proxyGroupsCommon
+    <<: *proxyGroupsInclude
     type: select
     filter: "(?i)🇺🇸|美国|美國|西雅图|西雅圖|洛杉矶|洛杉磯|艾斯本|america|states|seattle|angeles|ashburn"
   - name: "🚘 Auto"
     type: url-test
     tolerance: 100
     max-failed-times: 3
-    <<: *proxyGroupsProxies
+    <<: *proxyGroup
   - name: "🔙 Fallback"
     type: fallback
     url: 'https://www.gstatic.com/generate_204'
     max-failed-times: 3
-    <<: *proxyGroupsProxies
+    <<: *proxyGroup
   - name: "📎 Relay"
     type: relay
     proxies:
@@ -303,14 +327,15 @@ proxy-groups:
       - "🇭🇰 HK"
       - "🇮🇳 IN"
       - "🇯🇵 JP"
+      - "🇰🇵 KP"
       - "🇰🇷 KR"
       - "🇲🇴 MA"
       - "🇲🇾 MY"
       - "🇵🇭 PH"
       - "🇷🇺 RU"
       - "🇸🇬 SG"
-      - "🇹🇼 TW"
       - "🇹🇷 TR"
+      - "🇹🇼 TW"
       - "🇬🇧 UK"
       - "🇺🇸 US"
   - name: "🔊 ADS"
@@ -321,52 +346,52 @@ proxy-groups:
       - "🫴 Manual"
   - name: "🤖 AI"
     type: select
-    <<: *proxyGroupsProxiesCombined
+    <<: *proxyGroupCombined
   - name: "🍎 Apple"
     type: select
-    <<: *proxyGroupsProxiesCombined
+    <<: *proxyGroupCombined
   - name: "🇬 Google"
     type: select
-    <<: *proxyGroupsProxiesCombined
+    <<: *proxyGroupCombined
   - name: "🧪 YouTube"
     type: select
-    <<: *proxyGroupsProxiesCombined
+    <<: *proxyGroupCombined
   - name: "🥅 Netflix"
     type: select
-    <<: *proxyGroupsProxiesCombined
+    <<: *proxyGroupCombined
   - name: "🐭 Disney"
     type: select
-    <<: *proxyGroupsProxiesCombined
+    <<: *proxyGroupCombined
   - name: "👌 HBO"
     type: select
-    <<: *proxyGroupsProxiesCombined
+    <<: *proxyGroupCombined
   - name: "🧙🏿‍♀️ Twitch"
     type: select
-    <<: *proxyGroupsProxiesCombined
+    <<: *proxyGroupCombined
   - name: "🐦 Twitter"
     type: select
-    <<: *proxyGroupsProxiesCombined
+    <<: *proxyGroupCombined
   - name: "📲 Telegram"
     type: select
-    <<: *proxyGroupsProxiesCombined
+    <<: *proxyGroupCombined
   - name: "🚂 Steam"
     type: select
-    <<: *proxyGroupsProxiesCombined
+    <<: *proxyGroupCombined
   - name: "🪟 Microsoft"
     type: select
-    <<: *proxyGroupsProxiesCombined
+    <<: *proxyGroupCombined
   - name: "📈 Speedtest"
     type: select
-    <<: *proxyGroupsProxiesCombined
+    <<: *proxyGroupCombined
   - name: "👂 Spotify"
     type: select
-    <<: *proxyGroupsProxiesCombined
+    <<: *proxyGroupCombined
   - name: "🪜 Proxy"
     type: select
-    <<: *proxyGroupsProxiesCombined
+    <<: *proxyGroupCombined
   - name: "🐟 Leakage"
     type: select
-    <<: *proxyGroupsProxiesCombined
+    <<: *proxyGroupCombined
 #<<< Proxy Groups(Policy) Configuration End <<<
 
 #>>> Rules Configuration End >>>
