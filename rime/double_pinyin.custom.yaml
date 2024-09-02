@@ -1,0 +1,47 @@
+patch:
+  switches/@0/reset: 1
+  translator/preedit_format: []
+  # Ambiguous Spell
+  # speller/algebra/@before 3:
+  #   - erase/^xx$/
+  #   - derive/^([jqxy])u$/$1v/
+  #   - derive/^([aoe])([ioun])$/$1$1$2/
+  #   - derive/^([zcs])h/$1/
+  #   - derive/^([zcs])([^h])/$1h$2/
+
+
+  key_binder:
+    bindings:
+      # Paginate
+      - { when: has_menu, accept: minus, send: Page_Up }
+      - { when: has_menu, accept: equal, send: Page_Down }
+
+      # Switch syllables
+      - { when: composing, accept: bracketleft, send: Shift+Left }
+      - { when: composing, accept: bracketright, send: Shift+Right }
+      - { when: composing, accept: semicolon, send: Home }
+      - { when: composing, accept: apostrophe, send: End }
+
+      # Switch candidates
+      - { when: composing, accept: Shift+Tab, send: Up }
+      - { when: composing, accept: Shift+ISO_Left_Tab, send: Up }
+      - { when: composing, accept: Tab, send: Down }
+      - { when: composing, accept: KP_1, send: 1 }
+      - { when: composing, accept: KP_2, send: 2 }
+      - { when: composing, accept: KP_3, send: 3 }
+      - { when: composing, accept: KP_4, send: 4 }
+      - { when: composing, accept: KP_5, send: 5 }
+      - { when: composing, accept: KP_6, send: 6 }
+      - { when: composing, accept: KP_7, send: 7 }
+      - { when: composing, accept: KP_8, send: 8 }
+      - { when: composing, accept: KP_9, send: 9 }
+
+      # Toggle options
+      - { when: always, accept: Control+Shift+space, toggle: ascii_mode }
+      - { when: always, accept: Control+Shift+comma, toggle: full_shape }
+      - { when: always, accept: Control+Shift+period, toggle: ascii_punct} 
+      - { when: always, accept: Control+Shift+slash, toggle: traditionalization }
+
+      # Other
+      - { when: composing, accept: Control+c, send: Escape }
+
