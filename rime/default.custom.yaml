@@ -1,3 +1,5 @@
+# fcitx5 use shift to switch method when pressed rime is working like commit_text
+# if not used to it, use fcitx5-chinese-addons 
 patch:
   __include: rime_ice_suggestion:/
   schema_list:
