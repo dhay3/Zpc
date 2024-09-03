@@ -230,12 +230,12 @@ proxy-providers:
 #>>> Rule Providers Configuration Start >>>
 # https://github.com/Loyalsoldier/clash-rules
 # https://github.com/blackmatrix7/ios_rule_script/tree/master/rule/Clash
-rule-providers:
-  claude:
-    <<: *ruleProvidersCommon
-    behavior: domain
-    url: "https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/Claude/Claude.yaml"
-    path: ./ruleset/Claude.yaml
+#rule-providers:
+#  claude:
+#    <<: *ruleProvidersCommon
+#    behavior: domain
+#    url: "https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/Claude/Claude.yaml"
+#    path: ./ruleset/Claude.yaml
 #<<< Rule Providers Configuration End <<<
 
 #>>> Proxy Groups(Policy) Configuration Start >>>
@@ -499,7 +499,7 @@ rules:
   - GEOSITE,disney,🐭 Disney
   - GEOSITE,hbo,👌 HBO
   - GEOSITE,openai,🤖 AI
-  - RULE-SET,claude,🤖 AI
+  - GEOSITE,anthropic,🤖 AI
   - GEOSITE,twitch,🧙🏿‍♀️ Twitch
   - GEOSITE,twitter,🐦 Twitter
   - GEOSITE,telegram,📲 Telegram
