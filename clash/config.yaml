@@ -488,6 +488,7 @@ proxy-groups:
 #<<< Proxy Groups(Policy) Configuration End <<<
 
 #>>> Rules Configuration End >>>
+# https://github.com/MetaCubeX/meta-rules-dat/tree/meta/geo/geosite
 rules:
   - GEOIP,PRIVATE,🌐 Direct
   - GEOSITE,private,🌐 Direct
