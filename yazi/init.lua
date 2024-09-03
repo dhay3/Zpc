@@ -2,6 +2,7 @@ require("full-border"):setup {
 	-- Available values: ui.Border.PLAIN, ui.Border.ROUNDED
 	type = ui.Border.ROUNDED,
 }
+require("no-status"):setup()
 
 function Linemode:size_and_mtime()
 	local year = os.date("%Y")

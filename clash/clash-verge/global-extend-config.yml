@@ -1,0 +1,96 @@
+#>>> Genernal Configuration Start >>>
+bind-address: "*"
+mixed-port: 37897
+redir-port: 37898
+tproxy-port: 37899
+external-controller: 0.0.0.0:9090
+log-level: silent
+allow-lan: false
+ipv6: false
+unified-delay: true
+tcp-concurrent: true
+keep-alive-interval: 300
+global-client-fingerprint: random
+global-ua: clash.meta
+profile:
+  store-selected: true
+  store-fake-ip: true
+#<<< Genernal Configuration End <<<
+
+#>>> GEO Configuration Start >>>
+geodata-loader: standard
+geo-auto-update: true
+geo-update-interval: 168
+geox-url:
+  geoip: "https://hub.gitmirror.com/https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geoip.dat"
+  geosite: "https://hub.gitmirror.com/https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geosite.dat"
+  mmdb: "https://hub.gitmirror.com/https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/country.mmdb"
+  asn: "https://hub.gitmirror.com/https://github.com/xishang0128/geoip/releases/download/latest/GeoLite2-ASN.mmdb"
+#<<< GEO Configuration End <<<
+
+#>>> TUN/TAP Configuration Start >>>
+tun:
+  enable: true
+  stack: mixed
+  device: Meta
+  auto-route: true
+  auto-detect-interface: true
+  strict-route: true
+  dns-hijack:
+    - any:53
+  mtu: 1500
+#<<< TUN/TAP Configuration End <<<
+
+#>>> Domain Sniffing Configuration Start >>>
+sniffer:
+  enable: true
+  sniff:
+    HTTP:
+      ports: [80]
+    TLS:
+      ports: [443]
+    QUIC:
+      ports: [443]
+  skip-domain:
+    - '+.lan'
+    - '+.local'
+    - '+.localhost'
+    - '+.home'
+#<<< Domain Sniffing Configuration End <<<
+
+#>>> DNS Configuration Start >>>
+dns:
+  enable: true
+  prefer-h3: true
+  ipv6: false
+  use-hosts: true
+  use-system-hosts: true
+  enhanced-mode: fake-ip
+  fake-ip-range: 198.40.0.1/16
+  fake-ip-filter:
+    - '+.lan'
+    - '+.local'
+    - '+.localhost'
+    - '+.home'
+  # Nameservers for NS records
+  default-nameserver:
+    - 223.5.5.5
+    - 208.67.220.220
+  # Nameservers for Proxies
+  proxy-server-nameserver:
+    - https://208.67.220.220/dns-query#skip-cert-verify=true
+  # Default nameservers for all requests
+  nameserver:
+    - https://223.5.5.5/dns-query#skip-cert-verify=true
+  # Fallback nameserver for requests that exclude matched fallback-filter
+  fallback:
+    - https://208.67.220.220/dns-query#skip-cert-verify=true
+  fallback-filter:
+    geoip: true
+    geoip-code: CN
+  # It will not work in clash verge rev, use Global Extend Script instead
+  nameserver-policy:
+    '+.openwrt.home': '192.168.2.1'
+    '+.nas.home': '192.168.2.1'
+    '+.rack.home': '192.168.2.1'
+#<<< DNS Configuration End <<<
