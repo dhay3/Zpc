@@ -1,15 +1,45 @@
+# yay -S rime-ice-double-pinyin-git
+# uU 启用 radical 拼音
 patch:
-  switches/@0/reset: 1
   translator/preedit_format: []
   # Ambiguous Spell
-  # speller/algebra/@before 3:
-  #   - erase/^xx$/
-  #   - derive/^([jqxy])u$/$1v/
-  #   - derive/^([aoe])([ioun])$/$1$1$2/
-  #   - derive/^([zcs])h/$1/
-  #   - derive/^([zcs])([^h])/$1h$2/
-
-
+  speller/algebra:
+    - erase/^xx$/
+    - derive/^([jqxy])u$/$1v/
+    - derive/^([aoe])([ioun])$/$1$1$2/ 
+    - derive/^([zcs])h/$1/
+    - derive/^([zcs])([^h])/$1h$2/
+    # - derive/eng$/en/
+    - derive/en$/eng/
+    - derive/in$/ing/
+    - derive/ing$/in/
+    - xform/^([aoe])(ng)?$/$1$1$2/
+    - xform/iu$/Ⓠ/
+    - xform/[iu]a$/Ⓦ/
+    - xform/[uv]an$/Ⓡ/
+    - xform/[uv]e$/Ⓣ/
+    - xform/ing$|uai$/Ⓨ/
+    - xform/^sh/Ⓤ/
+    - xform/^ch/Ⓘ/
+    - xform/^zh/Ⓥ/
+    - xform/uo$/Ⓞ/
+    - xform/[uv]n$/Ⓟ/
+    - xform/(.)i?ong$/$1Ⓢ/
+    - xform/[iu]ang$/Ⓓ/
+    - xform/(.)en$/$1Ⓕ/
+    - xform/(.)eng$/$1Ⓖ/
+    - xform/(.)ang$/$1Ⓗ/
+    - xform/ian$/Ⓜ/
+    - xform/(.)an$/$1Ⓙ/
+    - xform/iao$/Ⓒ/
+    - xform/(.)ao$/$1Ⓚ/
+    - xform/(.)ai$/$1Ⓛ/
+    - xform/(.)ei$/$1Ⓩ/
+    - xform/ie$/Ⓧ/
+    - xform/ui$/Ⓥ/
+    - xform/(.)ou$/$1Ⓑ/
+    - xform/in$/Ⓝ/
+    - xlit/ⓆⓌⓇⓉⓎⓊⒾⓄⓅⓈⒹⒻⒼⒽⓂⒿⒸⓀⓁⓏⓍⓋⒷⓃ/qwrtyuiopsdfghmjcklzxvbn/
   key_binder:
     bindings:
       # Paginate
@@ -38,9 +68,9 @@ patch:
 
       # Toggle options
       - { when: always, accept: Control+Shift+space, toggle: ascii_mode }
-      - { when: always, accept: Control+Shift+comma, toggle: full_shape }
-      - { when: always, accept: Control+Shift+period, toggle: ascii_punct} 
-      - { when: always, accept: Control+Shift+slash, toggle: traditionalization }
+      - { when: always, accept: Control+Shift+less, toggle: full_shape }
+      - { when: always, accept: Control+Shift+greater, toggle: ascii_punct} 
+      - { when: always, accept: Control+Shift+question, toggle: simplification }
 
       # Other
       - { when: composing, accept: Control+c, send: Escape }
