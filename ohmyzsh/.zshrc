@@ -83,6 +83,7 @@ plugins=(
 # <<<< Built-in plugins (end)
 
 # >>>> Extra plugins (start)
+eval "$(fzf --zsh)"
 eval "$(thefuck --alias)"
 eval "$(zoxide init zsh)"
 # fasd is archived now
@@ -188,6 +189,8 @@ alias ll='ls -l'
 alias la='ls -a'
 alias lla='ls -la'
 alias lt='ls --tree'
+alias lta='ls -a --tree'
+alias lat='lta'
 alias ln='ln -v'
 #alias top='btop'
 alias cat='bat -pp'
@@ -225,7 +228,7 @@ alias nc='ncat'
 #alias jq='jq -C'
 alias lynx='lynx -display_charset=utf-8'
 alias gitm='gitmoji'
-alias fzf='fzf --reverse'
+alias fzf='fzf --reverse --tmux'
 alias vbox='VirtualBox %U'
 alias vag='vagrant'
 alias geeq='geeqie'
