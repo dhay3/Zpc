@@ -8,7 +8,7 @@ ipc_socket = true
 	program = "/bin/zsh"
 [window]
 	#decorations = "None"
-	opacity = 0.85
+	opacity = 0.9
 	blur = true
 	#dynamic_title = false
 	class = { instance = "Alacritty", general = "Alacritty" }
