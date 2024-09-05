@@ -40,7 +40,6 @@
 	directory = /opt/beef
 [credential]
 	helper = store
-	helpr = store
 [diff]
 	tool = kdiff3
 [difftool]
