@@ -15,6 +15,7 @@
 " Common Global Options
 set nocompatible
 set encoding=utf-8
+set mouse=a
 set confirm
 set fileformats=unix,dos,mac
 set backspace=indent,eol,start
