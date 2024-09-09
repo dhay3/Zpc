@@ -1,5 +1,5 @@
 customCommands:
-  - command: "git commit -m '{{ .Form.emoji }} ({{ .Form.scope }}): {{ .Form.message }}'"
+  - command: "git commit -m '{{ .Form.emoji }} {{ if .Form.scope }} ({{ .Form.scope }}): {{ end }} {{ .Form.message }}'"
     context: files
     description: Commit changes using gitmojis
     key: C
