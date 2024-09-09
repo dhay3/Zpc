@@ -54,8 +54,8 @@ export ZSH="/home/${USER}/.oh-my-zsh"
 # It will cause less to launch subl in editor mod which is unexpected
 # But if use bat instead of less it's not matter cause bat do not support editor mod right now
 #export VISUAL="/usr/bin/subl"
-export VISUAL="/usr/bin/vim"
-export EDITOR="/usr/bin/vim"
+export VISUAL="/usr/bin/nvim"
+export EDITOR="/usr/bin/nvim"
 export UPDATE_ZSH_DAYS=30
 export LANG=en_US.UTF-8
 export FZF_BASE=/usr/share/fzf
@@ -126,7 +126,7 @@ fi
 # Custom scripts
 #######################################################################
 #fastfetch
-[[ ! "$(readlink -f /proc/${PPID}/exe)" =~ "jetbrain" ]] && [[ -x "$(command -v fastfetch)" ]] && fastfetch --disable-linewrap
+[[ ! "$(readlink -f /proc/${PPID}/exe)" =~ "jetbrain" ]] && [[ -z "${ASCIINEMA_REC}" ]] && [[ -x "$(command -v fastfetch)" ]] && fastfetch --disable-linewrap
 
 # Print a new line after command excuted
 precmd() {
@@ -184,13 +184,15 @@ bindkey -M main '^[^[' sudo-command-line
 # >>>> Built-in aliases (start)
 alias c='clear'
 alias ls='lsd'
-alias l='ll'
 alias ll='ls -l'
 alias la='ls -a'
-alias lla='ls -la'
 alias lt='ls --tree'
-alias lta='ls -a --tree'
-alias lat='lta'
+alias lla='ll -a'
+alias llt='ll --tree'
+alias lat='la --tree'
+alias lta='lat'
+alias llat='llt -a'
+alias llta='llat'
 alias ln='ln -v'
 #alias top='btop'
 alias cat='bat -pp'
@@ -228,13 +230,17 @@ alias nc='ncat'
 #alias jq='jq -C'
 alias lynx='lynx -display_charset=utf-8'
 alias gitm='gitmoji'
+alias lg='lazygit'
 alias fzf='fzf --reverse --tmux'
+alias trz='trans zh:en'
+alias tre='trans en:zh'
 alias vbox='VirtualBox %U'
 alias vag='vagrant'
 alias geeq='geeqie'
 alias wirek='wireshark'
 alias typo='typora'
 #alias yy='yazi'
+alias vim='nvim'
 alias wbs='web_search duckduckgo'
 alias ytd='yt-dlp'
 alias rdm='remotedesktopmanager'
