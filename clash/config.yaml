@@ -177,6 +177,9 @@ sniffer:
 #<<< Domain Sniffing Configuration End <<<
 
 #>>> DNS Configuration Start >>>
+# 208.67.220.220 opendns
+# 9.9.9.9 quad9
+# 223.5.5.5 alidns
 dns:
   enable: true
   prefer-h3: true
@@ -192,17 +195,17 @@ dns:
     - '+.home'
   # Default DNS nameservers for all requests
   nameserver:
-    - https://223.5.5.5/dns-query
+    - https://223.5.5.5/dns-query#skip-cert-verify=true
   # DNS nameservers for Proxies
   proxy-server-nameserver:
-    - https://208.67.220.220/dns-query
+    - https://9.9.9.9/dns-query#skip-cert-verify=true
   # DNS nameservers for NS records
   default-nameserver:
     - 223.5.5.5
-    - 208.67.220.220
+    - 9.9.9.9
   # Fallback nameserver for requests that do not matched fallback-filter
   fallback:
-    - https://208.67.220.220/dns-query
+    - https://9.9.9.9/dns-query#skip-cert-verify=true
   fallback-filter:
     geoip: true
     geoip-code: CN
@@ -217,13 +220,13 @@ dns:
 proxy-providers:
   sub1:
     <<: *proxyProvidersCommon
-    url: "sub1.example.org"
-    path: ./proxy_providers/sub1.yaml
+    url: "example.org"
+    path: ./proxy_providers/sub.yaml
     proxy: "🇯🇵 JP"
   sub2:
     <<: *proxyProvidersCommon
-    url: "sub2.example.org"
-    path: ./proxy_providers/sub2.yaml
+    url: "example.org"
+    path: ./proxy_providers/sub.yaml
     proxy: "🇯🇵 JP"
 #<<< Proxy Providers Configuration End <<<
 
@@ -488,8 +491,8 @@ proxy-groups:
 #<<< Proxy Groups(Policy) Configuration End <<<
 
 #>>> Rules Configuration End >>>
-# https://github.com/MetaCubeX/meta-rules-dat/tree/meta/geo/geosite
 rules:
+  - DOMAIN,rs-ny.rustdesk.com,🌐 Direct
   - GEOIP,PRIVATE,🌐 Direct
   - GEOSITE,private,🌐 Direct
   - GEOSITE,category-ads-all,🔊 ADS
@@ -514,6 +517,7 @@ rules:
   - GEOSITE,bilibili,🐛 ChingChong
   - GEOSITE,zhihu,🐛 ChingChong
   - GEOSITE,douban,🐛 ChingChong
+  - GEOSITE,smzdm,🐛 ChingChong
   - GEOSITE,geolocation-!cn,🪜 Proxy
   - GEOSITE,cn,🌐 Direct
   - GEOIP,CN,🌐 Direct

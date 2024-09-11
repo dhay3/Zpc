@@ -72,23 +72,18 @@ dns:
     - '+.local'
     - '+.localhost'
     - '+.home'
-  # Nameservers for NS records
-  default-nameserver:
-    - 223.5.5.5
-    - 208.67.220.220
-  # Nameservers for Proxies
-  proxy-server-nameserver:
-    - https://208.67.220.220/dns-query#skip-cert-verify=true
-  # Default nameservers for all requests
   nameserver:
     - https://223.5.5.5/dns-query#skip-cert-verify=true
-  # Fallback nameserver for requests that exclude matched fallback-filter
+  proxy-server-nameserver:
+    - https://9.9.9.9/dns-query#skip-cert-verify=true
+  default-nameserver:
+    - 223.5.5.5
+    - 9.9.9.9
   fallback:
-    - https://208.67.220.220/dns-query#skip-cert-verify=true
+    - https://9.9.9.9/dns-query#skip-cert-verify=true
   fallback-filter:
     geoip: true
     geoip-code: CN
-  # It will not work in clash verge rev, use Global Extend Script instead
   nameserver-policy:
     '+.openwrt.home': '192.168.2.1'
     '+.nas.home': '192.168.2.1'
