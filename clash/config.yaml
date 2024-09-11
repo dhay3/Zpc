@@ -473,7 +473,7 @@ proxy-groups:
   - name: "🪟 Microsoft"
     type: select
     <<: *proxyGroupCombined
-  - name: "📈 Speedtest"
+  - name: "📈 IPinfo
     type: select
     <<: *proxyGroupCombined
   - name: "👂 Spotify"
@@ -506,7 +506,10 @@ rules:
   - GEOSITE,twitch,🧙🏿‍♀️ Twitch
   - GEOSITE,twitter,🐦 Twitter
   - GEOSITE,telegram,📲 Telegram
-  - GEOSITE,speedtest,📈 Speedtest
+  - GEOSITE,speedtest,📈 IPinfo
+  - DOMAIN-SUFFIX.myip.la,📈 IPinfo
+  - DOMAIN-SUFFIX,ipip.net,📈 IPinfo
+  - DOMAIN-SUFFIX,ipinfo.io,📈 IPinfo
   - GEOSITE,spotify,👂 Spotify
   - GEOSITE,microsoft@cn,🌐 Direct
   - GEOSITE,microsoft,🪟 Microsoft
