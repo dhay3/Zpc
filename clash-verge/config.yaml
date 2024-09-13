@@ -78,9 +78,10 @@ proxy-groups-options:
       - "🇻🇳 VN"
   proxyGroupCombined: &proxyGroupCombined
     proxies:
-      - "🌐 Direct"
-      - "🚫 Reject"
-      - "🫴 Manual"
+      - "🌐 DIRECT"
+      - "🚫 REJECT"
+      - "🫴 MANUAL"
+      - "🧅 TOR"
       - "🇦🇷 AR"
       - "🇦🇺 AU"
       - "🇧🇷 BR"
@@ -241,13 +242,24 @@ proxy-providers:
 #    path: ./ruleset/Claude.yaml
 #<<< Rule Providers Configuration End <<<
 
+#>>> Proxies Configuration Start >>>
+# TUN must be enabled when use the TOR proxy
+proxies:
+  - name: "🧅 TOR"
+    type: socks5
+    server: 127.0.0.1
+    port: 9050
+    udp: true
+    ip-version: ipv4
+#<<< Proxies Configuration End <<<
+
 #>>> Proxy Groups(Policy) Configuration Start >>>
 proxy-groups:
-  - name: "🌐 Direct"
+  - name: "🌐 DIRECT"
     type: select
     proxies:
       - DIRECT
-  - name: "🚫 Reject"
+  - name: "🚫 REJECT"
     type: select
     proxies:
       - REJECT
@@ -378,27 +390,13 @@ proxy-groups:
   - name: "🏳️‍🌈 Fusion"
     <<: *proxyGroupsInclude
     type: select
-    fiflter: "*"
-  - name: "🚘 Auto"
-    type: url-test
-    tolerance: 100
-    max-failed-times: 3
-    <<: *proxyGroup
-  - name: "🔙 Fallback"
-    type: fallback
-    url: 'https://www.gstatic.com/generate_204'
-    max-failed-times: 3
-    <<: *proxyGroup
-  - name: "📎 Relay"
-    type: relay
-    proxies:
-      - "🇭🇰 HK"
-      - "🇺🇸 US"
-  - name: "🫴 Manual"
+    exclude-filter: "🧅"
+  - name: "🫴 MANUAL"
     type: select
     proxies:
-      - "🌐 Direct"
-      - "🚫 Reject"
+      - "🌐 DIRECT"
+      - "🚫 REJECT"
+      - "🧅 TOR"
       - "🇦🇷 AR"
       - "🇦🇺 AU"
       - "🇧🇷 BR"
@@ -431,12 +429,22 @@ proxy-groups:
       - "🇺🇸 US"
       - "🇻🇳 VN"
       - "🏳️‍🌈 Fusion"
+  - name: "🚘 Auto"
+    type: url-test
+    tolerance: 100
+    max-failed-times: 3
+    <<: *proxyGroup
+  - name: "🔙 Fallback"
+    type: fallback
+    url: 'https://www.gstatic.com/generate_204'
+    max-failed-times: 3
+    <<: *proxyGroup
   - name: "🔊 ADS"
     type: select
     proxies:
-      - "🌐 Direct"
-      - "🚫 Reject"
-      - "🫴 Manual"
+      - "🌐 DIRECT"
+      - "🚫 REJECT"
+      - "🫴 MANUAL"
   - name: "🤖 AI"
     type: select
     <<: *proxyGroupCombined
@@ -473,13 +481,13 @@ proxy-groups:
   - name: "🪟 Microsoft"
     type: select
     <<: *proxyGroupCombined
-  - name: "📈 IPinfo
+  - name: "📈 IPinfo"
     type: select
     <<: *proxyGroupCombined
   - name: "👂 Spotify"
     type: select
     <<: *proxyGroupCombined
-  - name: "🐛 ChingChong"
+  - name: "🀄 Manchuria"
     type: select
     <<: *proxyGroupCombined
   - name: "🪜 Proxy"
@@ -492,9 +500,8 @@ proxy-groups:
 
 #>>> Rules Configuration End >>>
 rules:
-  - DOMAIN,rs-ny.rustdesk.com,🌐 Direct
-  - GEOIP,PRIVATE,🌐 Direct
-  - GEOSITE,private,🌐 Direct
+  - GEOIP,PRIVATE,🌐 DIRECT
+  - GEOSITE,private,🌐 DIRECT
   - GEOSITE,category-ads-all,🔊 ADS
   - GEOSITE,google,🇬 Google
   - GEOSITE,youtube,🧪 YouTube
@@ -507,22 +514,23 @@ rules:
   - GEOSITE,twitter,🐦 Twitter
   - GEOSITE,telegram,📲 Telegram
   - GEOSITE,speedtest,📈 IPinfo
-  - DOMAIN-SUFFIX.myip.la,📈 IPinfo
+  - DOMAIN,check.torproject.org,📈 IPinfo
+  - DOMAIN-SUFFIX,myip.la,📈 IPinfo
   - DOMAIN-SUFFIX,ipip.net,📈 IPinfo
   - DOMAIN-SUFFIX,ipinfo.io,📈 IPinfo
   - GEOSITE,spotify,👂 Spotify
-  - GEOSITE,microsoft@cn,🌐 Direct
+  - GEOSITE,microsoft@cn,🌐 DIRECT
   - GEOSITE,microsoft,🪟 Microsoft
-  - GEOSITE,apple@cn,🌐 Direct
+  - GEOSITE,apple@cn,🌐 DIRECT
   - GEOSITE,apple,🍎 Apple
-  - GEOSITE,steam@cn,🌐 Direct
+  - GEOSITE,steam@cn,🌐 DIRECT
   - GEOSITE,steam,🚂 Steam
-  - GEOSITE,bilibili,🐛 ChingChong
-  - GEOSITE,zhihu,🐛 ChingChong
-  - GEOSITE,douban,🐛 ChingChong
-  - GEOSITE,smzdm,🐛 ChingChong
+  - GEOSITE,bilibili,🀄 Manchuria
+  - GEOSITE,zhihu,🀄 Manchuria
+  - GEOSITE,douban,🀄 Manchuria
+  - GEOSITE,smzdm,🀄 Manchuria
+  - GEOIP,CN,🌐 DIRECT
+  - GEOSITE,cn,🌐 DIRECT
   - GEOSITE,geolocation-!cn,🪜 Proxy
-  - GEOSITE,cn,🌐 Direct
-  - GEOIP,CN,🌐 Direct
   - MATCH,🐟 Leakage
 #<<< Rules Configuration End <<<
