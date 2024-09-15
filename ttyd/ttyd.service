@@ -1,0 +1,14 @@
+[Unit]
+Description=TTYD
+After=syslog.target
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/ttyd -p 37681 -t fontSize=16 -p 37681 -o -W -S -K /home/${USER}/.config/ttyd/ttyd.pem -C /home/${USER}/.config/ttyd/ttyd.crt zsh
+Type=simple
+#Restart=always
+User=cc
+Group=cc
+
+[Install]
+WantedBy=multi-user.target
