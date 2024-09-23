@@ -6,31 +6,28 @@ from kitty.tab_bar import (
     draw_title,
     DrawData,
     ExtraData,
-    Formatter,
     TabBarData
 )
 
-ICON = "   "
-ICON_FG = as_rgb(color_as_int(Color(78, 81, 82)))
-ICON_BG = as_rgb(color_as_int(Color(157, 205, 105)))
-
 LEFT_SEP = ""
 RIGHT_SEP = ""
-ICON_SEP_COLOR_FG = as_rgb(color_as_int(Color(157, 205, 105)))
-ICON_SEP_COLOR_BG = as_rgb(color_as_int(Color(16, 16, 16)))
 
 
-def __draw_icon(screen: Screen, index: int) -> int:
+def __draw(fg: Color, bg: Color, text: str, screen: Screen) -> int:
+    if fg: screen.cursor.fg = as_rgb(color_as_int(fg))
+    if bg: screen.cursor.bg = as_rgb(color_as_int(bg))
+    if text: screen.draw(text)
+    end = screen.cursor
+    return end
+
+
+def __draw_icon(screen: Screen, draw_data: DrawData, index: int) -> int:
     if index != 1:
         return 0
-    icon_fg, icon_bg = screen.cursor.fg, screen.cursor.bg
-    screen.cursor.fg = ICON_FG
-    screen.cursor.bg = ICON_BG
-    screen.draw(ICON)
-    screen.cursor.fg = ICON_SEP_COLOR_FG
-    screen.cursor.bg = ICON_SEP_COLOR_BG
-    screen.draw(RIGHT_SEP)
-    screen.cursor.fg, screen.cursor.bg = icon_fg, icon_bg
+    fg, bg = screen.cursor.fg, screen.cursor.bg
+    __draw(draw_data.default_bg, Color(157, 205, 105), "   ", screen)
+    __draw(Color(157, 205, 105), draw_data.default_bg, RIGHT_SEP, screen)
+    screen.cursor.fg, screen.cursor.bg = fg, bg
     end = screen.cursor.x
     return end
 
@@ -49,8 +46,7 @@ def __draw_tab(
         next_tab_bg = as_rgb(draw_data.tab_bg(extra_data.next_tab))
     else:
         next_tab_bg = default_bg
-    screen.cursor.fg = default_bg
-    screen.draw(RIGHT_SEP)
+    __draw(default_bg, None, RIGHT_SEP, screen)
     draw_title(draw_data, screen, tab, index, max_tab_length)
     screen.cursor.fg = tab_bg
     screen.cursor.bg = default_bg
@@ -71,6 +67,6 @@ def draw_tab(
         is_last: bool,
         extra_data: ExtraData,
 ) -> int:
-    __draw_icon(screen, index)
-    end = __draw_tab(draw_data, screen, tab, max_title_length, index, extra_data)
-    return end
+    __draw_icon(screen, draw_data, index)
+    __draw_tab(draw_data, screen, tab, max_title_length, index, extra_data)
+    return screen.cursor.x

@@ -3,13 +3,14 @@
 #######################################################################
 # Pre-scripts
 #######################################################################
-#Start Tmux as the default Shell for user execlude dolphin and jetbrain
-if [[ -x "$(command -v tmux)" ]] && [[ -n "${DISPLAY}" ]] && [[ -z "${TMUX}" ]]; then
-    if [[ ! "$(readlink -f /proc/${PPID}/exe)" =~ "dolphin" ]] &&
-        [[ ! "$(readlink -f /proc/${PPID}/exe)" =~ "jetbrain" ]] &&
-        [[ ! "$(readlink -f /proc/${PPID}/exe)" =~ "plasmashell" ]]; then
+#Start Tmux as the default Shell for user
+if [[ -x "$(command -v tmux)" ]] && [[ -n "${PS1}" ]] && [[ -z "${TMUX}" ]]; then
+    case "$(readlink -f /proc/${PPID}/exe)" in
+    *dolphin* | *jetbrain* | *plasmashell* | *konsole*) ;;
+    *)
         exec tmux
-    fi
+        ;;
+    esac
 fi
 
 # yazi shell wrapper
@@ -48,6 +49,7 @@ ZSH_THEME="half-life"
 HISTFILE=~/.zhistory
 HISTSIZE=4096
 SAVEHIST=4096
+#export SSLKEYLOGFILE=/tmp/keylogfile.txt
 
 # Enviroment Virables
 export ZSH="/home/${USER}/.oh-my-zsh"
@@ -59,8 +61,8 @@ export EDITOR="/usr/bin/nvim"
 export UPDATE_ZSH_DAYS=30
 export LANG=en_US.UTF-8
 export FZF_BASE=/usr/share/fzf
-# Set firefox as the default browser for web-search plugin
-export BROWSER="firefox"
+# Set w3m as the default browser for web-search plugin
+export BROWSER="w3m"
 
 #######################################################################
 # Plugins
@@ -89,7 +91,7 @@ eval "$(zoxide init zsh)"
 # fasd is archived now
 #eval "$(fasd --init auto)"
 # Use control + g to activate navi
-eval "$(navi widget zsh)"
+#eval "$(navi widget zsh)"
 fpath+=/usr/share/zsh/plugins/zsh-completions/src
 [ -f /usr/share/zsh/plugins/zsh-autopair/autopair.zsh ] && source /usr/share/zsh/plugins/zsh-autopair/autopair.zsh
 [ -f /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ] && source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
@@ -149,8 +151,8 @@ gpg-connect-agent updatestartuptty /bye >/dev/null
 # ^[ equal to escape or alt
 #######################################################################
 # Movement
-bindkey -M main '^H' backward-char
-bindkey -M main '^L' forward-char
+#bindkey -M main '^H' backward-char
+#bindkey -M main '^L' forward-char
 bindkey -M main '^B' backward-word
 bindkey -M main '^F' forward-word
 bindkey -M main '^A' beginning-of-line
@@ -198,6 +200,7 @@ alias ln='ln -v'
 alias cat='bat -pp'
 alias less='bat --pager "less -i"'
 alias more='bat --pager "less -i"'
+alias watch='viddy'
 #alias man='man -P less'
 #alias grep='rg'
 #alias find='fd'
@@ -224,20 +227,25 @@ alias pacman='pacman --color always'
 # <<<< Built-in aliases (end)
 
 # >>>> Extra aliases (start)
-alias n='navi'
+#alias n='navi'
 alias nc='ncat'
 #With -C it will be export ANSI color code if redirect to files
 #alias jq='jq -C'
 alias lynx='lynx -display_charset=utf-8'
 alias gitm='gitmoji'
 alias lg='lazygit'
-alias fzf='fzf --reverse --tmux'
+alias w3m='w3m https://duckduckgo.com'
+alias fzf='fzf --reverse --border --highlight-line'
 alias trz='trans zh:en'
 alias tre='trans en:zh'
+alias shc='steghide embed'
+alias shx='steghide extract'
+alias shi='steghide info'
+alias bwh='bandwhich'
 alias vbox='VirtualBox %U'
 alias vag='vagrant'
 alias geeq='geeqie'
-alias wirek='wireshark'
+alias gshark='wireshark'
 alias typo='typora'
 #alias yy='yazi'
 alias vim='nvim'
@@ -248,18 +256,19 @@ alias xfreerdp='xfreerdp /cert:tofu /fonts /bpp:64 /video /dynamic-resolution /s
 # Alias for logout KDE plasma with cancel menu
 alias logout="qdbus org.kde.LogoutPrompt /LogoutPrompt org.kde.LogoutPrompt.promptLogout"
 alias icat="kitten icat"
+alias issh="kitten ssh"
 # <<<< Extra aliases (end)
 
 # >>>> File assosicated aliases (start)
 alias -s {json,yaml,yml,txt}=subl
 alias -s {mp4,webm,avi}=vlc
 alias -s {png,jpeg,jpg}=geeqie
-alias -s {xlsx,cvs}=et
-alias -s html=firefox
-alias -s docs=wps
-alias -s ppt=wpp
+alias -s {xlsx,cvs}=libreoffice --calc
+alias -s docs=libreoffice --writer
+alias -s ppt=libreoffce --impress
 alias -s pdf=okular
 alias -s md=typora
+alias -s html=zen-browser
 # <<<< File assosicated aliases (end)
 
 # Crack jetbrains' IDE
