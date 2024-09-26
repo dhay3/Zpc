@@ -503,6 +503,12 @@ rules:
   - GEOIP,PRIVATE,🌐 DIRECT
   - GEOSITE,private,🌐 DIRECT
   - GEOSITE,category-ads-all,🔊 ADS
+  - GEOSITE,speedtest,📈 IPinfo
+  - DOMAIN,fast.com,📈 IPinfo
+  - DOMAIN,check.torproject.org,📈 IPinfo
+  - DOMAIN-SUFFIX,myip.la,📈 IPinfo
+  - DOMAIN-SUFFIX,ipip.net,📈 IPinfo
+  - DOMAIN-SUFFIX,ipinfo.io,📈 IPinfo
   - GEOSITE,google,🇬 Google
   - GEOSITE,youtube,🧪 YouTube
   - GEOSITE,netflix,🥅 Netflix
@@ -513,11 +519,6 @@ rules:
   - GEOSITE,twitch,🧙🏿‍♀️ Twitch
   - GEOSITE,twitter,🐦 Twitter
   - GEOSITE,telegram,📲 Telegram
-  - GEOSITE,speedtest,📈 IPinfo
-  - DOMAIN,check.torproject.org,📈 IPinfo
-  - DOMAIN-SUFFIX,myip.la,📈 IPinfo
-  - DOMAIN-SUFFIX,ipip.net,📈 IPinfo
-  - DOMAIN-SUFFIX,ipinfo.io,📈 IPinfo
   - GEOSITE,spotify,👂 Spotify
   - GEOSITE,microsoft@cn,🌐 DIRECT
   - GEOSITE,microsoft,🪟 Microsoft
