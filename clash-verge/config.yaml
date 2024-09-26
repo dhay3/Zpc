@@ -530,6 +530,7 @@ rules:
   - GEOSITE,zhihu,🀄 Manchuria
   - GEOSITE,douban,🀄 Manchuria
   - GEOSITE,smzdm,🀄 Manchuria
+  - DOMAIN-SUFFIX,linux.do,🌐 DIRECT
   - GEOIP,CN,🌐 DIRECT
   - GEOSITE,cn,🌐 DIRECT
   - GEOSITE,geolocation-!cn,🪜 Proxy
