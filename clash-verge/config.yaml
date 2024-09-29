@@ -500,9 +500,10 @@ proxy-groups:
 
 #>>> Rules Configuration End >>>
 rules:
-  - GEOIP,PRIVATE,🌐 DIRECT
+  - GEOIP,PRIVATE,🌐 DIRECT,no-resolve
   - GEOSITE,private,🌐 DIRECT
   - GEOSITE,category-ads-all,🔊 ADS
+  - IP-CIDR,9.9.9.9/32,🌐 DIRECT,no-resolve
   - GEOSITE,speedtest,📈 IPinfo
   - DOMAIN,fast.com,📈 IPinfo
   - DOMAIN,check.torproject.org,📈 IPinfo
@@ -531,7 +532,7 @@ rules:
   - GEOSITE,douban,🀄 Manchuria
   - GEOSITE,smzdm,🀄 Manchuria
   - DOMAIN-SUFFIX,linux.do,🌐 DIRECT
-  - GEOIP,CN,🌐 DIRECT
+  - GEOIP,CN,🌐 DIRECT,no-resolve
   - GEOSITE,cn,🌐 DIRECT
   - GEOSITE,geolocation-!cn,🪜 Proxy
   - MATCH,🐟 Leakage
