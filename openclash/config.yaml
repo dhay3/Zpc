@@ -127,8 +127,25 @@ tun:
   enable: true
   stack: mixed
   auto-route: true
+  auto-redirect: false
   auto-detect-interface: true
   strict-route: true
+  route-exclude-address:
+    - 0.0.0.0/8
+    - 10.0.0.0/8
+    - 100.64.0.0/10
+    - 127.0.0.0/8
+    - 169.254.0.0/16
+    - 172.16.0.0/12
+    - 192.0.0.0/24
+    - 192.0.2.0/24
+    - 192.88.99.0/24
+    - 192.168.0.0/16
+    - 198.18.0.0/15
+    - 198.51.100.0/24
+    - 203.0.113.0/24
+    - 224.0.0.0/3
+    - 209.250.254.15/32
   dns-hijack:
     - any:53
   mtu: 1500
@@ -158,6 +175,10 @@ dns:
   fake-ip-filter:
     - 'geosite:private'
     - 'geosite:cn'
+    - '+.lan'
+    - '+.local'
+    - '+.localhost'
+    - '+.home'
     - '+.rustdesk.com'
   nameserver:
     - https://223.5.5.5/dns-query#skip-cert-verify=true
@@ -173,10 +194,11 @@ dns:
     geoip-code: CN
   nameserver-policy:
     'geosite:cn': https://223.5.5.5/dns-query#skip-cert-verify=true
+    '+.lan': 192.168.2.1
+    '+.local': 192.168.2.1
+    '+.localhost': 192.168.2.1
+    '+.home': 192.168.2.1
     '+.rustdesk.com': https://223.5.5.5/dns-query#skip-cert-verify=true
-    '+.openwrt.home': 192.168.2.1
-    '+.nas.home': 192.168.2.1
-    '+.rack.home': 192.168.2.1
 
 proxy-providers:
   sub1:
@@ -438,15 +460,19 @@ proxy-groups:
 
 rules:
   - GEOIP,PRIVATE,🌐 DIRECT,no-resolve
-  - GEOSITE,private,🌐 DIRECT
-  - GEOSITE,category-ads-all,🔊 ADS
+  - GEOIP,CN,🌐 DIRECT,no-resolve
   - IP-CIDR,9.9.9.9/32,🌐 DIRECT,no-resolve
-  - GEOSITE,speedtest,📈 IPinfo
+  - GEOSITE,category-ads-all,🔊 ADS
+  - GEOSITE,private,🌐 DIRECT
+  - DOMAIN-SUFFIX,linux.do,🌐 DIRECT
+  - DOMAIN-SUFFIX,rustdesk.com,🌐 DIRECT
+  - PROCESS-PATH-REGEX,.*rustdesk,🌐 DIRECT
   - DOMAIN,fast.com,📈 IPinfo
   - DOMAIN,check.torproject.org,📈 IPinfo
   - DOMAIN-SUFFIX,myip.la,📈 IPinfo
   - DOMAIN-SUFFIX,ipip.net,📈 IPinfo
   - DOMAIN-SUFFIX,ipinfo.io,📈 IPinfo
+  - GEOSITE,speedtest,📈 IPinfo
   - GEOSITE,google,🇬 Google
   - GEOSITE,youtube,🧪 YouTube
   - GEOSITE,netflix,🥅 Netflix
@@ -468,10 +494,6 @@ rules:
   - GEOSITE,zhihu,🀄 Manchuria
   - GEOSITE,douban,🀄 Manchuria
   - GEOSITE,smzdm,🀄 Manchuria
-  - DOMAIN-SUFFIX,linux.do,🌐 DIRECT
-  - DOMAIN-SUFFIX,rustdesk.com,🌐 DIRECT
-  - PROCESS-PATH-REGEX,.*rustdesk,🌐 DIRECT
-  - GEOIP,CN,🌐 DIRECT,no-resolve
   - GEOSITE,cn,🌐 DIRECT
   - GEOSITE,geolocation-!cn,🪜 Proxy
   - MATCH,🐟 Leakage
