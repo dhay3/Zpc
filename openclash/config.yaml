@@ -6,7 +6,7 @@ proxy-providers-options:
     type: http
     interval: 3600
     health-check:
-      enable: false
+      enable: true
       <<: *healthCheck
 
 proxy-groups-options:
